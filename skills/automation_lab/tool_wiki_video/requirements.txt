@@ -1,0 +1,9 @@
+gTTS
+moviepy
+requests
+wikipedia
+svglib
+reportlab
+opencv-python
+Pillow
+imageio

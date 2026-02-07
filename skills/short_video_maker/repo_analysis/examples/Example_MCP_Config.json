@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "short-video-maker": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e", "PEXELS_API_KEY=YOUR_KEY_HERE",
+        "gyoridavid/short-video-maker:latest-tiny"
+      ]
+    }
+  }
+}
