@@ -1,33 +1,23 @@
-# Skill: Receita Personalizada (Props Dinâmicas)
+# Skill: A Personalização (Props)
 
-## 📘 Traduzindo para o "Mamanês"
-Imagine uma receita de bolo que tem um "espaço em branco" para o sabor.
-*   Hoje você escreve "Chocolate" no papelzinho, e o bolo sai de Chocolate.
-*   Amanhã você escreve "Morango", e sai de Morango.
+## 🧬 O DNA da Criação
+Não construímos uma nova realidade para cada pessoa. Criamos uma estrutura única (Template) que se adapta a quem a observa.
+Os **Props** são como o DNA: instruções que mudam a cor, o texto e a forma do resultado final, mantendo a mesma essência.
 
-Isso são **Props Dinâmicas**. E para ninguém colocar "Cimento" no lugar do sabor, a gente usa um fiscal chamado **Zod** (o segurança da receita).
+*   **Props:** As variáveis que tornam cada vídeo único (Nome, Cor, Título).
 
-1.  **Zod:** O segurança que confere: "Isso é texto? Isso é cor? O tamanho é número?".
-2.  **Props:** Os ingredientes que você pode trocar sem ter que cozinhar uma receita nova do zero.
-
-## 💻 Como fica o código
+## 🎬 O Código da Adaptação
 
 ```tsx
-import { z } from "zod";
+import { z } from "zod"; // O Guardião da Estrutura
 
-// 1. A Lista de Ingredientes Permitidos (O Fiscal Zod)
-export const receitaSchema = z.object({
-  titulo: z.string(),           // Tem que ser texto!
-  cor: z.string(),              // Tem que ser texto (código da cor)!
-  tamanho: z.number().min(10),  // Tem que ser número, e no mínimo 10!
+// O Molde (O que esperamos receber)
+export const myCompSchema = z.object({
+  title: z.string(), // Um texto
+  color: z.string(), // Uma cor
 });
 
-// 2. O Bolo que aceita os ingredientes
-export const TituloDinamico = ({ titulo, cor, tamanho }) => {
-  return (
-    <h1 style={{ color: cor, fontSize: tamanho }}>
-      {titulo}
-    </h1>
-  );
+export const TemplateMestre = ({ title, color }) => {
+  return <h1 style={{ color }}>{title}</h1>;
 };
 ```

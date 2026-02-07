@@ -1,30 +1,29 @@
-# Skill: Organizando a Gaveta (Pastas)
+# Skill: A Arquitetura da Informação (Pastas)
 
-## 📘 Traduzindo para o "Mamanês"
-Sabe aquela gaveta de talheres? Garfo com garfo, faca com faca.
-Se você jogar tudo misturado, na hora da pressa não acha nada.
-No Remotion, usamos **Pastas (Folders)** para não misturar os vídeos do Instagram com os vídeos do YouTube.
+## 🌿 O Conceito (A Textura da Organização)
+Imagine uma biblioteca imensa. Se todos os livros estivessem jogados no chão, o conhecimento seria inacessível.
+No Remotion, usamos **Folders** como prateleiras temáticas. É a **simplicidade** de saber exatamente onde cada história está guardada.
 
-1.  **Folder:** É a divisória da gaveta.
-2.  **Organização:** Deixa o menu lateral bonitinho e fácil de achar.
+1.  **Folder:** A Prateleira.
+2.  **Composição:** O Livro (A História Visual).
 
-## 💻 Como fica o código
+## 🎬 A Tradução para Código
 
 ```tsx
 import { Composition, Folder } from 'remotion';
 
-export const CozinhaOrganizada = () => {
+export const BibliotecaVisual = () => {
   return (
     <>
-      {/* Gaveta de Marketing */}
+      {/* A Prateleira do Instagram */}
       <Folder name="Instagram">
-        <Composition id="StoryDaPromo" width={1080} height={1920} />
-        <Composition id="ReelDancinha" width={1080} height={1920} />
+        <Composition id="StoryInfluencer" width={1080} height={1920} />
+        <Composition id="ReelViral" width={1080} height={1920} />
       </Folder>
 
-      {/* Gaveta de Aulas */}
+      {/* A Prateleira do YouTube */}
       <Folder name="YouTube">
-        <Composition id="TutorialCompleto" width={1920} height={1080} />
+        <Composition id="Documentario" width={1920} height={1080} />
       </Folder>
     </>
   );

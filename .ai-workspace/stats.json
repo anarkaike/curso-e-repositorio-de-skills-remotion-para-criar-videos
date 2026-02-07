@@ -1,0 +1,61 @@
+{
+  "sessions": 0,
+  "rules": {},
+  "autoEvolutionLog": [
+    {
+      "timestamp": "2026-02-05T21:44:11.408Z",
+      "heuristics": {
+        "total": 15,
+        "byType": {
+          "navigation": 12,
+          "documentation": 0,
+          "prompts": 3,
+          "analysis": 0
+        }
+      },
+      "signals": {
+        "totalRules": 0,
+        "drifted": [],
+        "lowScore": [],
+        "missingHistory": []
+      }
+    },
+    {
+      "timestamp": "2026-02-05T22:43:07.726Z",
+      "heuristics": {
+        "total": 15,
+        "byType": {
+          "navigation": 12,
+          "documentation": 0,
+          "prompts": 3,
+          "analysis": 0
+        }
+      },
+      "signals": {
+        "totalRules": 0,
+        "drifted": [],
+        "lowScore": [],
+        "missingHistory": []
+      }
+    },
+    {
+      "timestamp": "2026-02-05T23:43:07.700Z",
+      "heuristics": {
+        "total": 15,
+        "byType": {
+          "navigation": 12,
+          "documentation": 0,
+          "prompts": 3,
+          "analysis": 0
+        }
+      },
+      "signals": {
+        "totalRules": 0,
+        "drifted": [],
+        "lowScore": [],
+        "missingHistory": []
+      }
+    }
+  ],
+  "lastUpdated": "2026-02-05T23:43:07.700Z"
+}

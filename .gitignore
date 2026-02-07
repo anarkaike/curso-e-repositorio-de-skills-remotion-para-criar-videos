@@ -1,0 +1,30 @@
+*.mp4
+*.aiff
+*.mp3
+*.log
+*video_output/*
+projects/*/video_output/*
+projects/*/temp/*
+new_env/
+skills/automation_lab/tool_ecommerce_video/src/new_env/
+
+# System
+.DS_Store
+Thumbs.db
+
+# Dependencies
+**/node_modules/
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+.env.*
+
+# Build
+dist/
+.output/
+.nuxt/

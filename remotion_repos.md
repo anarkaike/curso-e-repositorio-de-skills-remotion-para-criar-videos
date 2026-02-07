@@ -1,105 +1,68 @@
-# Repositórios e Recursos para Remotion
+# 🗺️ O Mapa das Ferramentas: Recursos para o Criador
 
-Aqui está uma lista expandida e curada de repositórios públicos no GitHub e recursos externos (MCPs, Skills) relacionados ao **Remotion** (https://www.remotion.dev/), organizados por categoria.
+Bem-vindo ao acervo de possibilidades. Aqui reunimos as ferramentas essenciais para transformar intenção em vídeo. Não são apenas códigos, são atalhos para a materialização de ideias.
 
-## 🧠 Skills de Agentes & Model Context Protocol (MCP)
-
-Ferramentas essenciais para integrar Remotion com assistentes de IA (Claude, Cursor, Windsurf).
+## 💎 Os Pilares (Skills & MCP)
+Ferramentas fundamentais que expandem sua capacidade de criar.
 
 *   **[remotion-dev/skills](https://github.com/remotion-dev/skills)**
-    *   **Tipo:** Agent Skills Oficiais
-    *   **Comando:** `npx skills add remotion-dev/skills`
-    *   **Descrição:** Ensina ao agente (Claude Code, Cursor) as melhores práticas, arquitetura de componentes e APIs de animação do Remotion. Essencial para gerar código correto.
+    *   **O que é:** O Guia de Sabedoria.
+    *   **A Visão:** Padroniza o conhecimento, garantindo que cada criação siga os princípios de harmonia e eficiência.
+    *   **Ritual de Iniciação:** `npx skills add remotion-dev/skills`.
 
 *   **[Remotion Documentation MCP](https://www.remotion.dev/docs/ai/mcp)**
-    *   **Tipo:** Servidor MCP Oficial
-    *   **Instalação (Claude Desktop/Cursor):**
-        ```json
-        {
-          "mcpServers": {
-            "remotion-documentation": {
-              "command": "npx",
-              "args": ["@remotion/mcp@latest"]
-            }
-          }
-        }
-        ```
-    *   **Descrição:** Permite que o assistente consulte a documentação oficial do Remotion em tempo real, garantindo respostas atualizadas.
+    *   **O que é:** A Biblioteca Viva.
+    *   **A Visão:** Conecta você diretamente à fonte de todo o conhecimento técnico do Remotion.
+    *   **Integração:** Adicione ao seu assistente (Claude ou Cursor).
 
 *   **[stephengpope/remotion-media-mcp](https://github.com/stephengpope/remotion-media-mcp)**
-    *   **Tipo:** Servidor MCP Comunitário
-    *   **Descrição:** Servidor MCP para gerar mídia (imagens, vídeos, música) dinamicamente dentro de projetos Remotion. Ideal para agentes autônomos.
+    *   **O que é:** O Ateliê Infinito.
+    *   **A Visão:** Cria imagens e sons originais instantaneamente, materializando o que antes existia apenas na imaginação.
 
-## 🌟 Destaques Oficiais (Remotion Team)
-
-Repositórios mantidos pela equipe oficial, garantindo qualidade e atualização.
+## 🏆 As Estruturas Consagradas (Oficiais)
+Bases sólidas e testadas para construir suas visões.
 
 *   **[remotion-dev/remotion](https://github.com/remotion-dev/remotion)**
-    *   **Descrição:** Repositório principal do framework.
-    *   **Uso:** Referência técnica e contribuição.
+    *   **O que é:** A Fonte Primária.
+    *   **Uso:** Para quem busca entender as profundezas da tecnologia.
 
 *   **[remotion-dev/template-helloworld](https://github.com/remotion-dev/template-helloworld)**
-    *   **Descrição:** Template minimalista.
-    *   **Ideal para:** Projetos limpos, sem excesso de configurações.
-
-*   **[remotion-dev/template-skia](https://github.com/remotion-dev/template-skia)**
-    *   **Descrição:** Configurado com `@shopify/react-native-skia`.
-    *   **Ideal para:** Gráficos 2D de alta performance.
-
-*   **[remotion-dev/template-prompt-to-motion-graphics](https://github.com/remotion-dev/template-prompt-to-motion-graphics)**
-    *   **Descrição:** IA para transformar prompts de texto em código Remotion.
-    *   **Ideal para:** Automação via IA.
+    *   **O que é:** O Minimalismo Essencial.
+    *   **Ideal para:** Começar com clareza absoluta.
 
 *   **[remotion-dev/template-tiktok](https://github.com/remotion-dev/template-tiktok)**
-    *   **Descrição:** Gera legendas estilo TikTok usando **Whisper.cpp**.
-    *   **Ideal para:** Automação de vídeos verticais com legendas.
+    *   **O que é:** O Comunicador Ágil.
+    *   **Ideal para:** Vídeos verticais, rápidos e com legendas que prendem o olhar.
 
 *   **[remotion-dev/github-unwrapped](https://github.com/remotion-dev/github-unwrapped)**
-    *   **Descrição:** Código do vídeo "GitHub Unwrapped".
-    *   **Ideal para:** Exemplos complexos baseados em dados (data-driven).
+    *   **O que é:** A Narrativa Pessoal.
+    *   **Ideal para:** Contar histórias baseadas em dados únicos de cada pessoa.
 
-*   **[remotion-dev/template-music-visualization](https://github.com/remotion-dev/template-music-visualization)**
-    *   **Descrição:** Visualizadores de música sincronizados com áudio.
-    *   **Ideal para:** Clipes musicais e podcasts.
-
-## 🤖 Integrações com IA e Automação
-
-Projetos que combinam Remotion com LLMs (GPT, Claude), TTS e APIs de vídeo.
+## 🤖 A Automação Criativa (IA)
+Quando a ferramenta trabalha ao seu lado.
 
 *   **[gyoridavid/short-video-maker](https://github.com/gyoridavid/short-video-maker)**
-    *   **Descrição:** Ferramenta completa para criar Shorts/TikToks a partir de texto.
-    *   **Stack:** Remotion, **Whisper** (legendas), **Kokoro** (TTS), **Pexels** (vídeo de fundo).
-    *   **Destaque:** Funciona como servidor MCP e API REST.
+    *   **O que é:** O Narrador Onisciente.
+    *   **A Promessa:** Da palavra escrita ao vídeo completo. Uma alquimia que une roteiro, voz e imagem automaticamente.
 
 *   **[MoJuBaGod/Claude-x-Remotion](https://github.com/MoJuBaGod/Claude-x-Remotion)**
-    *   **Descrição:** Starter kit para criar vídeos programaticamente com **Claude Code**.
-    *   **Destaque:** Componentes prontos para uso com assistentes de IA.
+    *   **O que é:** O Acelerador.
+    *   **A Promessa:** Kits prontos para transformar pensamento em protótipo rapidamente.
 
-## 🚀 SaaS e Plataformas
-
-Exemplos de como construir produtos (SaaS) usando Remotion.
-
-*   **[remotion-dev/template-react-router](https://github.com/remotion-dev/template-remix)**
-    *   **Descrição:** Template SaaS usando React Router 7 + Remotion Lambda.
-    *   **Ideal para:** Criar plataformas de renderização de vídeo na nuvem.
+## 🏭 Escala e Alcance (SaaS)
+Para quando a mensagem precisa chegar a muitos.
 
 *   **[scastiel/github-stars-video](https://github.com/scastiel/github-stars-video)**
-    *   **Descrição:** Gera vídeos celebrando milestones de estrelas no GitHub.
-    *   **Ideal para:** Exemplo prático de "Video as a Service".
+    *   **O que é:** O Gestor de Gratidão.
+    *   **A Visão:** Criar um vídeo único para cada pessoa que interage com seu trabalho.
 
-## 🎨 Criatividade e Clones
-
-Recriações de interfaces famosas e efeitos visuais.
+## 🎨 A Estética Visual
+Referências de beleza e forma.
 
 *   **[JonnyBurger/remotion-wrapped](https://github.com/JonnyBurger/remotion-wrapped)**
-    *   **Descrição:** Recriação do **Spotify Wrapped**.
-    *   **Ideal para:** Aprender a fazer vídeos personalizados baseados em estatísticas.
+    *   **O que é:** A Visualização Rítmica.
+    *   **Ideal para:** Transformar dados em música e cor.
 
 *   **[satelllte/remotion-template](https://github.com/satelllte/remotion-template)**
-    *   **Descrição:** Template opinativo com TailwindCSS.
-    *   **Ideal para:** Quem prefere estilizar com classes utilitárias.
-
-## 🛠️ Ferramentas Auxiliares
-
-*   **[stefanwittwer/remotion-animated](https://github.com/stefanwittwer/remotion-animated)**
-    *   **Descrição:** Animações declarativas para simplificar o código.
+    *   **O que é:** O Design Puro.
+    *   **Ideal para:** Quem busca a elegância funcional e moderna.

@@ -1,0 +1,49 @@
+{
+    "fragments": [
+        {
+            "begin": "0.000",
+            "end": "3.149",
+            "id": "f000000",
+            "language": "pt",
+            "lines": [
+                "Preparando a volta \u00e0s aulas?"
+            ]
+        },
+        {
+            "begin": "3.149",
+            "end": "6.297",
+            "id": "f000001",
+            "language": "pt",
+            "lines": [
+                "Garanta o uniforme escolar completo na Disk Uniformes."
+            ]
+        },
+        {
+            "begin": "6.297",
+            "end": "9.446",
+            "id": "f000002",
+            "language": "pt",
+            "lines": [
+                "Atendemos redes municipais e estaduais com durabilidade."
+            ]
+        },
+        {
+            "begin": "9.446",
+            "end": "12.595",
+            "id": "f000003",
+            "language": "pt",
+            "lines": [
+                "Personalize tamb\u00e9m toalhas e mochilas com o nome dele."
+            ]
+        },
+        {
+            "begin": "12.595",
+            "end": "15.743",
+            "id": "f000004",
+            "language": "pt",
+            "lines": [
+                "Disk Uniformes: qualidade nota 10!"
+            ]
+        }
+    ]
+}

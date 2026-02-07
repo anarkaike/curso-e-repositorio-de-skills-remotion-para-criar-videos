@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pydantic
+duckduckgo-search
+requests
+python-multipart
+sqlmodel
+asyncpg
+python-dotenv
+moviepy<2.0.0
+numpy
+Pillow
+gTTS

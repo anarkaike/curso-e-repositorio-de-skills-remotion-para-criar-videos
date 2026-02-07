@@ -1,0 +1,4 @@
+primary: #204db6
+secondary: #ffffff
+text_color: #FFFFFF
+background_color: #000000

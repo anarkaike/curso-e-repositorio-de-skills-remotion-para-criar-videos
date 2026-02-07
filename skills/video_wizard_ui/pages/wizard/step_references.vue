@@ -1,0 +1,102 @@
+<template>
+  <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-xl font-semibold mb-4">Passo 3: Preferências de Estilo</h2>
+    <p class="text-gray-600 mb-6">Avalie estes estilos para nos ajudar a definir o visual do vídeo.</p>
+
+    <div v-if="loading" class="text-center py-10">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <p class="mt-4 text-gray-500">Gerando referências de estilo...</p>
+    </div>
+
+    <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div v-for="(ref, index) in references" :key="index" class="border rounded-lg p-4 flex flex-col">
+        <div class="aspect-video bg-gray-100 rounded-md mb-4 overflow-hidden">
+            <img :src="ref.url" class="w-full h-full object-cover" @error="ref.url = 'https://placehold.co/600x400?text=Style+Preview+Error'" />
+        </div>
+        <h3 class="font-medium text-lg mb-2">{{ ref.style_name }}</h3>
+        <p class="text-sm text-gray-500 mb-4">{{ ref.description }}</p>
+        
+        <div class="mt-auto flex justify-between gap-2">
+            <button @click="rate(index, 'love')" 
+                :class="ref.rating === 'love' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-white border-gray-200 hover:bg-gray-50'"
+                class="flex-1 py-2 border rounded-md text-sm font-medium transition-colors">
+                ❤️ Amei
+            </button>
+            <button @click="rate(index, 'meh')" 
+                :class="ref.rating === 'meh' ? 'bg-yellow-100 border-yellow-500 text-yellow-700' : 'bg-white border-gray-200 hover:bg-gray-50'"
+                class="flex-1 py-2 border rounded-md text-sm font-medium transition-colors">
+                😐 Médio
+            </button>
+            <button @click="rate(index, 'hate')" 
+                :class="ref.rating === 'hate' ? 'bg-red-100 border-red-500 text-red-700' : 'bg-white border-gray-200 hover:bg-gray-50'"
+                class="flex-1 py-2 border rounded-md text-sm font-medium transition-colors">
+                👎 Odiei
+            </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-8">
+      <button @click="router.back()" class="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Voltar</button>
+      <button @click="saveAndNext" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">Próximo: Selecionar Conteúdo</button>
+    </div>
+  </div>
+</template>
+
+<script setup>
+const router = useRouter()
+const project = useProject()
+const loading = ref(true)
+const references = ref([])
+
+onMounted(async () => {
+    // Generate reference images based on project keywords
+    const keywords = project.value.keywords.join(' ') || 'uniforms'
+    const styles = [
+        { name: 'Minimalista e Limpo', prompt: `minimalist clean design ${keywords}, high key lighting, white background` },
+        { name: 'Ousado e Energético', prompt: `bold colorful energetic ${keywords}, dynamic angles, vibrant colors` },
+        { name: 'Corporativo Profissional', prompt: `corporate professional trusted ${keywords}, blue tones, office setting` }
+    ]
+
+    // Simulate fetching/generating
+    references.value = styles.map(s => {
+        const originalUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(s.prompt)}?nologo=true&seed=${Math.floor(Math.random() * 1000)}`
+        return {
+            style_name: s.name,
+            description: s.prompt,
+            url: `http://localhost:35000/proxy/image?url=${encodeURIComponent(originalUrl)}`,
+            rating: null
+        }
+    })
+    
+    // Fake loading delay for UX
+    setTimeout(() => { loading.value = false }, 1000)
+})
+
+const rate = (index, rating) => {
+    references.value[index].rating = rating
+}
+
+const saveAndNext = async () => {
+  // Save ratings to project
+  project.value.references = references.value.map(r => ({
+      id: r.style_name,
+      url: r.url,
+      type: 'image',
+      rating: r.rating,
+      comment: r.description
+  }))
+
+  try {
+    await $fetch(`http://localhost:35000/projects/${project.value.id}`, {
+        method: 'PUT',
+        body: project.value
+    })
+    // Go to the original Step 2 (now Step 4) which is Image Selection
+    router.push('/wizard/step2')
+  } catch (e) {
+      console.error(e)
+      alert('Failed to save preferences')
+  }
+}
+</script>

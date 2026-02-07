@@ -1,29 +1,24 @@
-# Skill: Só a Foto (Thumbnails)
+# Skill: A Fotografia do Instante (Thumbnails)
 
-## 📘 Traduzindo para o "Mamanês"
-As vezes a gente não quer o filme inteiro, quer só o porta-retrato.
-Sabe aquela "capinha" do vídeo no YouTube que faz a gente clicar? É a **Thumbnail**.
-No Remotion, a gente chama de **Still** (Estático). É um vídeo que não se mexe, perfeito para tirar uma foto e usar de capa.
+## 📸 A Captura da Essência
+Em um fluxo contínuo de tempo (vídeo), existem momentos que merecem ser eternizados.
+O Remotion não apenas cria movimentos, ele também sabe pausar o tempo para criar a imagem perfeita (Thumbnail).
 
-1.  **Still:** É a câmera fotográfica.
-2.  **Vantagem:** Você usa o mesmo código do vídeo para fazer a capa. Assim a letra e a cor ficam iguazinhas!
+*   **Still:** É o instante congelado, a fotografia de alta resolução extraída do movimento.
 
-## 💻 Como fica o código
+## 🎬 O Código da Pausa
 
 ```tsx
 import { Still } from 'remotion';
-import { MeuTitulo } from './MeuTitulo';
+import { ExemploAmanhecer } from './FadeIn'; // O movimento original
 
-export const CapaDoVideo = () => {
+export const Cartaz = () => {
   return (
     <Still
-      id="CapaParaYouTube"
-      component={MeuTitulo}
+      id="CapaDoYoutube"
+      component={ExemploAmanhecer} // A fonte da imagem
       width={1280}
       height={720}
-      defaultProps={{
-        titulo: "COMO NÃO DORMIR LENDO CÓDIGO",
-      }}
     />
   );
 };

@@ -1,0 +1,5 @@
+Colors: "volta, yellow; aulas, blue"
+Colors: "uniforme, blue; completo, green"
+Colors: "municipais, yellow; estaduais, orange; durabilidade, green"
+Colors: "Personalize, orange; toalhas, blue; mochilas, yellow"
+Colors: "Disk Uniformes, blue; qualidade, green"
