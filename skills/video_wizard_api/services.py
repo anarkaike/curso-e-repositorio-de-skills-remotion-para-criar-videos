@@ -26,7 +26,8 @@ async def generate_suggestions(suggestion_type: str, context: str) -> list[str]:
             'target_audience': f"List 5 specific target audiences for a product named '{context}'. Return ONLY the list items separated by commas, nothing else.",
             'keywords': f"List 8 relevant SEO keywords for '{context}'. Return ONLY the list items separated by commas, nothing else.",
             'colors': f"Suggest 3 color palette pairs (Primary, Secondary) for '{context}' in format 'Hex1,Hex2'. Return ONLY the list items separated by commas, nothing else.",
-            'emotions': f"List 5 suitable emotions/tones for a video about '{context}'. Return ONLY the list items separated by commas, nothing else."
+            'emotions': f"List 5 suitable emotions/tones for a video about '{context}'. Return ONLY the list items separated by commas, nothing else.",
+            'niche': f"List 3 relevant industry niches for a product named '{context}'. Return ONLY the list items separated by commas, nothing else."
         }
         
         prompt = prompts.get(suggestion_type, "")

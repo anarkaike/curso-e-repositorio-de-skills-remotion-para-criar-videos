@@ -23,6 +23,19 @@
       <!-- General Uploads -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Fotos da Empresa (Loja, Equipe, Produtos)</label>
+        
+        <!-- AI Suggestion / Auto-Generate Banner -->
+        <div class="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
+            <div>
+                <h4 class="text-sm font-medium text-blue-800">Sem fotos? Deixe a IA criar para você!</h4>
+                <p class="text-xs text-blue-600">Gere imagens profissionais baseadas no seu tema ({{ project.theme }}).</p>
+            </div>
+            <button @click="generateAIImages" :disabled="generatingAI" class="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center gap-2">
+                <span v-if="generatingAI" class="animate-spin h-3 w-3 border-2 border-white border-t-transparent rounded-full"></span>
+                {{ generatingAI ? 'Criando...' : 'Gerar Imagens IA' }}
+            </button>
+        </div>
+
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
             <input type="file" multiple accept="image/*" @change="uploadPhotos" class="hidden" id="photos-upload" />
             <label for="photos-upload" class="cursor-pointer">
@@ -35,12 +48,14 @@
         <p class="text-xs text-gray-500 mt-1">Fotos reais do seu negócio para dar autenticidade.</p>
         
         <!-- Preview Grid -->
-        <div v-if="uploadedPhotos.length > 0" class="grid grid-cols-4 gap-4 mt-4">
-            <div v-for="(photo, index) in uploadedPhotos" :key="index" class="relative group">
-                <img :src="photo" class="h-24 w-full object-cover rounded-md" />
-                <button @click="removePhoto(index)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div v-if="uploadedPhotos.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+            <div v-for="(photo, index) in uploadedPhotos" :key="index" class="relative group aspect-square">
+                <img :src="photo" class="w-full h-full object-cover rounded-md border" />
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all rounded-md"></div>
+                <button @click="removePhoto(index)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity transform hover:scale-110">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
+                <span v-if="photo.includes('proxy')" class="absolute bottom-1 right-1 bg-blue-600 text-white text-[10px] px-1 rounded opacity-75">IA</span>
             </div>
         </div>
       </div>
@@ -57,6 +72,46 @@
 const router = useRouter()
 const project = useProject()
 const uploadedPhotos = ref([]) // Temporary local state for preview
+const generatingAI = ref(false)
+
+// Initialize from project state if available
+if (project.value.context_photos && project.value.context_photos.length > 0) {
+    uploadedPhotos.value = [...project.value.context_photos]
+}
+
+const generateAIImages = async () => {
+    generatingAI.value = true
+    try {
+        const theme = project.value.theme || project.value.niche || 'business'
+        const keywords = ['professional', 'high quality', 'photorealistic', '4k']
+        
+        // Generate 4 distinct images
+        const prompts = [
+            `${theme} concept art ${keywords.join(' ')}`,
+            `${theme} background minimal ${keywords.join(' ')}`,
+            `${theme} scenery ${keywords.join(' ')}`,
+            `${theme} close up detail ${keywords.join(' ')}`
+        ]
+
+        for (const prompt of prompts) {
+            // Use our proxy endpoint to ensure reliability and avoid CORS issues
+            // Adding a random seed ensures variety
+            const seed = Math.floor(Math.random() * 10000)
+            const originalUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?nologo=true&seed=${seed}`
+            const proxyUrl = `http://localhost:35000/proxy/image?url=${encodeURIComponent(originalUrl)}`
+            
+            uploadedPhotos.value.push(proxyUrl)
+            
+            if (!project.value.context_photos) project.value.context_photos = []
+            project.value.context_photos.push(proxyUrl)
+        }
+    } catch (e) {
+        console.error('AI Generation failed', e)
+        alert('Could not generate images. Please try again.')
+    } finally {
+        generatingAI.value = false
+    }
+}
 
 const uploadFile = async (file) => {
     const formData = new FormData()

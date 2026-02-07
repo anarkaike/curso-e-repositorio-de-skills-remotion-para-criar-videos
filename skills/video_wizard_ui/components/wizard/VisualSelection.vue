@@ -1,76 +1,111 @@
 <template>
-  <div class="space-y-6">
-    <div class="mb-6 border-b pb-6">
-      <h3 class="text-lg font-medium text-gray-900 mb-4">Marca & Template</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-              <label class="block text-sm font-medium text-gray-700">Template de Vídeo</label>
-              <select v-model="template" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-                  <option value="simple">Simples e Limpo</option>
-                  <option value="corporate">Barra Corporativa</option>
-                  <option value="bold">Moldura Ousada</option>
-              </select>
-              <p class="text-xs text-gray-500 mt-1">O estilo visual da montagem do vídeo.</p>
-          </div>
-          <div>
-              <label class="block text-sm font-medium text-gray-700">Texto do Cabeçalho</label>
-              <input type="text" v-model="headerText" placeholder="e.g. Nova Coleção" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-              <p class="text-xs text-gray-500 mt-1">Texto curto no topo do vídeo.</p>
-          </div>
-          <div>
-              <label class="block text-sm font-medium text-gray-700">Texto do Rodapé</label>
-              <input type="text" v-model="footerText" placeholder="e.g. www.seusite.com.br" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
-              <p class="text-xs text-gray-500 mt-1">Texto no rodapé, ideal para site ou telefone.</p>
-          </div>
+  <div class="space-y-8">
+    <!-- Header -->
+    <div class="flex items-center gap-2 mb-4 border-b border-gray-100 pb-4">
+      <span class="text-2xl">🎬</span>
+      <div>
+        <h3 class="text-lg font-bold text-gray-900">Finalização & Visual</h3>
+        <p class="text-sm text-gray-500">Escolha o template final e selecione as melhores imagens para o seu vídeo.</p>
       </div>
     </div>
 
-    <div class="mb-6">
-      <div class="flex justify-between items-center mb-2">
-          <h3 class="text-lg font-medium text-gray-900">Sugestões de IA & Busca Web</h3>
-          <button @click="loadSuggestions" class="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-              Regerar Ideias
-          </button>
+    <!-- Template Selection -->
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+      <h4 class="text-md font-semibold text-gray-900 mb-4 flex items-center gap-2">
+         <span class="p-1 bg-indigo-100 text-indigo-600 rounded">Layout</span>
+         Escolha o Template
+      </h4>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label 
+            v-for="opt in templateOptions" 
+            :key="opt.value"
+            class="relative flex flex-col cursor-pointer border-2 rounded-xl p-4 transition-all hover:border-blue-400"
+            :class="template === opt.value ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white'"
+          >
+              <input type="radio" v-model="template" :value="opt.value" class="sr-only">
+              <div class="flex items-center justify-between mb-2">
+                  <span class="font-medium text-gray-900">{{ opt.label }}</span>
+                  <div v-if="template === opt.value" class="h-5 w-5 rounded-full bg-blue-600 text-white flex items-center justify-center">
+                      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+                  </div>
+              </div>
+              <p class="text-xs text-gray-500">{{ opt.desc }}</p>
+          </label>
       </div>
-      <div v-if="loading" class="text-center py-10">
-          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-          <p class="mt-2 text-gray-500">Caçando visuais...</p>
+    </div>
+
+    <!-- Text Inputs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Texto do Cabeçalho</label>
+            <input type="text" v-model="headerText" placeholder="e.g. Nova Coleção" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 bg-gray-50 border">
+            <p class="text-xs text-gray-500 mt-1">Texto curto no topo do vídeo.</p>
+        </div>
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Texto do Rodapé</label>
+            <input type="text" v-model="footerText" placeholder="e.g. www.seusite.com.br" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 bg-gray-50 border">
+            <p class="text-xs text-gray-500 mt-1">Texto no rodapé (site, telefone).</p>
+        </div>
+    </div>
+
+    <!-- Image Selection -->
+    <div>
+      <div class="flex justify-between items-center mb-4">
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">Seleção de Mídia</h3>
+            <p class="text-sm text-gray-500">Selecione as imagens que aparecerão no vídeo.</p>
+          </div>
+          <div class="flex gap-2">
+            <label class="cursor-pointer px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                <input type="file" multiple @change="handleFileUpload" class="hidden" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                Upload
+            </label>
+            <button @click="loadSuggestions" class="px-3 py-1.5 border border-blue-200 bg-blue-50 rounded-lg text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                Regerar IA
+            </button>
+          </div>
       </div>
-      <div v-else class="grid grid-cols-3 gap-4">
+
+      <div v-if="loading" class="text-center py-20 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p class="mt-4 text-gray-500">Caçando visuais perfeitos...</p>
+      </div>
+
+      <div v-else class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
         <div 
           v-for="img in suggestions" 
           :key="img.url" 
-          class="relative group cursor-pointer border rounded-lg overflow-hidden transition-all duration-200 aspect-[9/16]"
-          :class="{'ring-4 ring-blue-500 transform scale-105': selectedImages.has(img.url)}"
+          class="relative group cursor-pointer rounded-lg overflow-hidden aspect-[9/16] transition-all duration-200"
+          :class="selectedImages.has(img.url) ? 'ring-4 ring-blue-500 shadow-lg transform scale-[1.02]' : 'border border-gray-200 hover:shadow-md'"
           @click="toggleImage(img.url)"
         >
           <img :src="img.url" :alt="img.description" class="w-full h-full object-cover" @error="img.url = 'https://placehold.co/600x400?text=Image+Error'" />
-          <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
-             <div v-if="selectedImages.has(img.url)" class="absolute top-2 right-2 bg-blue-600 text-white rounded-full p-1">
+          
+          <!-- Selection Overlay -->
+          <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all flex items-center justify-center">
+             <div v-if="selectedImages.has(img.url)" class="absolute top-2 right-2 bg-blue-600 text-white rounded-full p-1 shadow-sm animate-bounce-short">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
              </div>
-             <span class="absolute bottom-2 left-2 bg-white px-2 py-1 rounded text-xs opacity-75 truncate max-w-[90%]">{{ img.source }}</span>
+             <span class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 pt-6 text-white text-[10px] truncate">{{ img.source }}</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="mb-6">
-       <h3 class="text-lg font-medium text-gray-900 mb-2">Envie os Seus</h3>
-       <input type="file" multiple @change="handleFileUpload" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
-    </div>
-
-    <div class="flex justify-end mt-6">
+    <!-- Final Action -->
+    <div class="flex justify-end pt-6 border-t border-gray-100">
         <button 
           @click="finish" 
-          :disabled="selectedImages.size === 0 || generating"
-          class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
+          :disabled="generating"
+          class="py-3 px-6 rounded-xl shadow-lg text-base font-bold text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 transition-all transform hover:scale-[1.02]"
         >
-          <span v-if="generating" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-          {{ generating ? 'Gerando...' : `Finalizar & Gerar (${selectedImages.size})` }}
+          <span v-if="generating" class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+          <span v-else class="text-xl">✨</span>
+          {{ generating ? 'Gerando Vídeo...' : (selectedImages.size === 0 ? 'Gerar com IA (Automático)' : `Finalizar & Gerar (${selectedImages.size} assets)`) }}
         </button>
       </div>
   </div>
@@ -87,6 +122,12 @@ const generating = ref(false)
 const template = ref('simple')
 const headerText = ref('')
 const footerText = ref('')
+
+const templateOptions = [
+    { value: 'simple', label: 'Simples e Limpo', desc: 'Minimalista, foco no conteúdo.' },
+    { value: 'corporate', label: 'Barra Corporativa', desc: 'Profissional, com rodapé fixo.' },
+    { value: 'bold', label: 'Moldura Ousada', desc: 'Alto impacto, bordas coloridas.' }
+]
 
 onMounted(() => {
     // Set defaults
@@ -143,7 +184,27 @@ const handleFileUpload = async (event) => {
 const finish = async () => {
   generating.value = true
   try {
+      // Auto-select images if none selected
+      if (selectedImages.value.size === 0) {
+        if (suggestions.value.length > 0) {
+            // Select top 5
+            suggestions.value.slice(0, 5).forEach(img => selectedImages.value.add(img.url))
+        } else {
+            // Fallback if no suggestions loaded yet
+            await loadSuggestions()
+            if (suggestions.value.length > 0) {
+                 suggestions.value.slice(0, 5).forEach(img => selectedImages.value.add(img.url))
+            } else {
+                // Absolute fallback
+                selectedImages.value.add('https://placehold.co/600x400?text=AI+Generated+Content')
+            }
+        }
+      }
+
       // Save project first to ensure consistency
+      // Update context photos with selected images
+      project.value.context_photos = Array.from(selectedImages.value)
+      
       await $fetch(`http://localhost:35000/projects/${project.value.id}`, {
           method: 'PUT',
           body: project.value

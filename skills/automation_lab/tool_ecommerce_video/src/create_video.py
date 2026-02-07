@@ -314,15 +314,28 @@ def generate_subtitle_clips_with_audio(fragment, photo_path: Path, audio_path: P
     end_time = float(fragment['end'])
     duration = end_time - start_time
 
-    if not photo_path.exists() or photo_path.suffix.lower() not in {'.png', '.jpg', '.jpeg', '.webp'}:
-        raise FileNotFoundError(f"Invalid or unsupported image file: {photo_path}")
-
-    # Preprocess the photo with PIL to ensure compatibility
-    temp_photo_path = output_directory / f"temp_photo_{index}.jpg"
-    with Image.open(photo_path) as img:
-        img = img.convert("RGB")  # Ensure compatibility with ImageClip
-        img = zoom_photo_to_fit(img, output_width, output_height)  # Adjust image to match aspect ratio
-        img.save(temp_photo_path, format="JPEG")  # Save as JPEG to ensure compatibility
+    if not photo_path.exists():
+        print(f"Warning: Image not found {photo_path}. Using placeholder.")
+        # Create a placeholder image
+        temp_photo_path = output_directory / f"placeholder_{index}.jpg"
+        img = Image.new('RGB', (output_width, output_height), color=(73, 109, 137))
+        d = ImageDraw.Draw(img)
+        d.text((10,10), "Image Missing", fill=(255,255,0))
+        img.save(temp_photo_path)
+    else:
+        # Preprocess the photo with PIL to ensure compatibility
+        temp_photo_path = output_directory / f"temp_photo_{index}.jpg"
+        try:
+            with Image.open(photo_path) as img:
+                img = img.convert("RGB")  # Ensure compatibility with ImageClip
+                img = zoom_photo_to_fit(img, output_width, output_height)  # Adjust image to match aspect ratio
+                img.save(temp_photo_path, format="JPEG")  # Save as JPEG to ensure compatibility
+        except Exception as e:
+            print(f"Error processing image {photo_path}: {e}. Using placeholder.")
+            img = Image.new('RGB', (output_width, output_height), color=(100, 100, 100))
+            d = ImageDraw.Draw(img)
+            d.text((50, output_height//2), "Image Error", fill=(255,255,255))
+            img.save(temp_photo_path)
 
     # Verify the temporary photo path exists
     if not temp_photo_path.exists():

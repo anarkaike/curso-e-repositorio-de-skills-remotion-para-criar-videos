@@ -1,53 +1,88 @@
 <template>
-  <div class="max-w-6xl mx-auto">
-    <!-- Navigation Tabs -->
-    <div class="flex border-b border-gray-200 bg-white rounded-t-lg shadow-sm overflow-x-auto">
-      <button 
-        v-for="(step, index) in steps" 
-        :key="index"
-        @click="currentStep = index"
-        class="flex-1 py-4 px-6 text-sm font-medium text-center focus:outline-none transition-colors whitespace-nowrap"
-        :class="currentStep === index ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'"
-      >
-        <div class="flex items-center justify-center gap-2">
-            <span class="flex items-center justify-center w-6 h-6 rounded-full text-xs border"
-                :class="currentStep === index ? 'border-blue-600 bg-blue-100' : 'border-gray-400 bg-gray-100'">
-                {{ index + 1 }}
-            </span>
-            {{ step.title }}
+  <div class="max-w-5xl mx-auto pb-20">
+    
+    <!-- Wizard Header -->
+    <div class="text-center py-8">
+        <h1 class="text-3xl font-extrabold text-gray-900">Criador de Vídeo Inteligente</h1>
+        <p class="text-gray-500 mt-2">Transforme suas ideias em vídeos profissionais em 4 passos simples.</p>
+    </div>
+
+    <!-- Stepper Navigation -->
+    <div class="mb-10">
+        <div class="flex items-center justify-between relative max-w-3xl mx-auto px-4">
+            <!-- Connecting Line -->
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 -z-10 rounded-full"></div>
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-blue-600 transition-all duration-500 rounded-full -z-10" :style="{ width: `${(currentStep / (steps.length - 1)) * 100}%` }"></div>
+
+            <!-- Steps -->
+            <div v-for="(step, index) in steps" :key="index" class="relative flex flex-col items-center group cursor-pointer" @click="currentStep = index">
+                <div 
+                    class="w-10 h-10 rounded-full flex items-center justify-center border-4 transition-all duration-300 bg-white z-10 font-bold"
+                    :class="[
+                        currentStep === index ? 'border-blue-600 text-blue-600 scale-110 shadow-lg' : 
+                        currentStep > index ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-200 text-gray-400'
+                    ]"
+                >
+                    <span v-if="currentStep > index">✓</span>
+                    <span v-else>{{ index + 1 }}</span>
+                </div>
+                <span 
+                    class="absolute -bottom-8 w-32 text-center text-xs font-semibold transition-colors duration-300"
+                    :class="currentStep === index ? 'text-blue-700' : 'text-gray-400'"
+                >
+                    {{ step.title }}
+                </span>
+            </div>
         </div>
-      </button>
     </div>
 
     <!-- Content Area -->
-    <div class="bg-white p-6 rounded-b-lg shadow-md min-h-[500px]">
-        <h2 class="text-2xl font-bold mb-2">{{ steps[currentStep].title }}</h2>
-        <p class="text-gray-500 mb-6">{{ steps[currentStep].description }}</p>
-
-        <component :is="steps[currentStep].component" />
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden min-h-[600px] flex flex-col">
+        <!-- Step Content -->
+        <div class="p-8 flex-grow">
+            <transition name="fade" mode="out-in">
+                <component :is="steps[currentStep].component" :key="currentStep" />
+            </transition>
+        </div>
         
-        <!-- Global Navigation -->
-        <div class="flex justify-between mt-8 pt-6 border-t border-gray-100">
+        <!-- Footer Navigation -->
+        <div class="bg-gray-50 px-8 py-6 border-t border-gray-100 flex justify-between items-center">
             <button 
                 v-if="currentStep > 0" 
                 @click="currentStep--" 
-                class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50"
+                class="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-white hover:shadow-sm transition-all flex items-center gap-2"
             >
-                ← Anterior
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                Voltar
             </button>
-            <div v-else></div>
+            <div v-else>
+                <button @click="$router.push('/')" class="text-gray-500 hover:text-gray-700 text-sm font-medium">Cancelar</button>
+            </div>
 
             <button 
                 v-if="currentStep < steps.length - 1" 
                 @click="nextStep" 
-                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                class="px-8 py-2.5 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-md hover:shadow-lg transform transition-all hover:-translate-y-0.5 flex items-center gap-2"
             >
-                Próximo →
+                Próximo
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </button>
         </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
 
 <script setup>
 import ProjectDefinition from '@/components/wizard/ProjectDefinition.vue'

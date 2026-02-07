@@ -23,6 +23,9 @@ from models import (
     Reference, ReferenceBase, ImageSuggestion, VideoGenerationRequest
 )
 from services import run_video_generation, generate_suggestions
+from agents import run_style_agent_pipeline
+from templates_data import templates
+from knowledge_base import KnowledgeBase
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -43,14 +46,67 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/templates")
+def get_templates():
+    return templates
+
+@app.post("/projects/from-template/{template_id}", response_model=ProjectRead)
+def create_project_from_template(template_id: str, session: Session = Depends(get_session)):
+    template = next((t for t in templates if t["id"] == template_id), None)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
+    project_data = template["project_data"].copy()
+    project_id = str(uuid.uuid4())
+    
+    # Use ProjectCreate for validation
+    project_in = ProjectCreate(**project_data, id=project_id)
+    
+    # Create DB model
+    # We must handle json fields explicitly as model_validate might miss property setters
+    db_project = Project.model_validate(project_in, update={"id": project_id})
+    
+    # Handle list/dict conversions
+    db_project.keywords = project_in.keywords
+    db_project.emotions = project_in.emotions
+    db_project.component_props = project_in.component_props
+    
+    session.add(db_project)
+    session.commit()
+    session.refresh(db_project)
+    
+    return db_project
+
+@app.get("/agents/styles")
+async def get_agent_styles(niche: str, theme: str):
+    """
+    Agentic workflow: Ideation -> Generation -> Analysis (Simulated)
+    Returns a list of style concepts with matching titles/descriptions.
+    """
+    return await run_style_agent_pipeline(niche, theme)
+
 @app.get("/suggestions/{suggestion_type}")
-async def get_suggestions(suggestion_type: str, context: str):
+async def get_suggestions(suggestion_type: str, context: str, session: Session = Depends(get_session)):
     """
     Get AI suggestions for wizard fields.
     suggestion_type: target_audience, keywords, colors, emotions
     context: string input
     """
-    return await generate_suggestions(suggestion_type, context)
+    kb = KnowledgeBase(session)
+    
+    # 1. Check Cache (Semantic Search)
+    cached_result = kb.find_similar(context, suggestion_type)
+    if cached_result:
+        return cached_result
+    
+    # 2. Generate if not found
+    result = await generate_suggestions(suggestion_type, context)
+    
+    # 3. Save to Cache
+    if result:
+        kb.add_entry(context, suggestion_type, result)
+        
+    return result
 
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -146,47 +202,82 @@ async def upload_image(file: UploadFile = File(...)):
 import random
 
 @app.get("/proxy/image")
-async def proxy_image(url: str):
+async def proxy_image(url: str, fallback_mode: str = "smart"):
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         }
-        resp = requests.get(url, headers=headers, stream=True, timeout=10)
+        # Timeout reduced to 5s to fail faster
+        resp = requests.get(url, headers=headers, stream=True, timeout=5)
+        
         if resp.status_code != 200:
-            raise HTTPException(status_code=400, detail="Failed to fetch image")
+            print(f"Proxy failed for {url}: Status {resp.status_code}")
+            raise Exception(f"Upstream status {resp.status_code}")
         
         return StreamingResponse(resp.iter_content(chunk_size=1024), media_type=resp.headers.get("content-type", "image/jpeg"))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Proxy error for {url}: {e}")
+        
+        if fallback_mode == "smart":
+            # Fallback to a reliable placeholder image (Picsum)
+            # Try to extract a seed from the original URL to keep it deterministic
+            seed = random.randint(0, 1000)
+            try:
+                parsed = urllib.parse.urlparse(url)
+                qs = urllib.parse.parse_qs(parsed.query)
+                if 'seed' in qs:
+                    seed = qs['seed'][0]
+            except:
+                pass
+                
+            fallback_url = f"https://picsum.photos/seed/{seed}/600/400"
+            try:
+                resp = requests.get(fallback_url, stream=True, timeout=5)
+                return StreamingResponse(resp.iter_content(chunk_size=1024), media_type="image/jpeg")
+            except:
+                 pass # Fall through to ultimate fallback
+
+        # Ultimate fallback (Placehold.co) - used if smart fails or mode is 'placeholder'
+        fallback_text = "Generation+Failed" if fallback_mode == "smart" else "Preview+Unavailable"
+        fallback_url = f"https://placehold.co/600x400?text={fallback_text}"
+        resp = requests.get(fallback_url, stream=True)
+        return StreamingResponse(resp.iter_content(chunk_size=1024), media_type="image/svg+xml")
 
 @app.get("/suggestions/images", response_model=List[ImageSuggestion])
 def get_image_suggestions(query: str):
     results = []
     
-    # 1. AI Generation (Pollinations.ai)
+    # 1. AI Generation (Pollinations.ai) - unreliable, so we mix with others
     prompts = [
         f"professional photo of {query}, cinematic lighting, 4k",
         f"illustration of {query}, modern vector art",
-        f"close up shot of {query}, detailed"
     ]
     
     for i, prompt in enumerate(prompts):
         encoded_prompt = urllib.parse.quote(prompt)
-        # Use simpler URL structure which might be more stable
-        # Add random seed to ensure variety
         seed = random.randint(0, 10000)
         original_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?nologo=true&seed={seed}&width=1080&height=1920"
-        
-        # Verify if URL is reachable (optional, but good for user experience)
         proxied_url = f"http://localhost:35000/proxy/image?url={urllib.parse.quote(original_url)}"
-
         results.append(ImageSuggestion(
             url=proxied_url,
             source="AI (Pollinations)",
             description=prompt
         ))
 
-    # 2. Web Search (DuckDuckGo)
+    # 2. Lorem Picsum (Reliable fallback for generic 'random' feel)
+    # We can't search, but we can give nice images
+    for i in range(3):
+        seed = random.randint(0, 10000)
+        # picsum doesn't support search, but good for filling
+        original_url = f"https://picsum.photos/seed/{seed}/1080/1920"
+        proxied_url = f"http://localhost:35000/proxy/image?url={urllib.parse.quote(original_url)}"
+        results.append(ImageSuggestion(
+            url=proxied_url,
+            source="Stock (Picsum)",
+            description=f"Stock image for {query}"
+        ))
+
+    # 3. Web Search (DuckDuckGo)
     try:
         with DDGS() as ddgs:
             ddgs_images = list(ddgs.images(query, max_results=5))
@@ -243,4 +334,11 @@ async def generate_video(request: GenerateVideoRequest, session: Session = Depen
     if result["status"] == "failed":
          raise HTTPException(status_code=500, detail=result.get("error", "Unknown error"))
          
+    # Save video URL to project
+    if "video_url" in result:
+        db_project.output_video_url = result["video_url"]
+        session.add(db_project)
+        session.commit()
+        session.refresh(db_project)
+
     return result

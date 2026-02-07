@@ -1,0 +1,4 @@
+primary: #00d2ff
+secondary: #000000
+text_color: #FFFFFF
+background_color: #000000

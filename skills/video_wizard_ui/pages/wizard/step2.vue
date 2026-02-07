@@ -88,7 +88,7 @@
         <button @click="router.back()" class="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Voltar</button>
         <button 
           @click="finish" 
-          :disabled="selectedImages.size === 0 || generating"
+          :disabled="generating"
           class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
         >
           <span v-if="generating" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
@@ -111,11 +111,17 @@ const template = ref('simple')
 const headerText = ref('')
 const footerText = ref('')
 
-onMounted(() => {
+onMounted(async () => {
     // Set defaults
     headerText.value = project.value.product_name || project.value.name || 'Vídeo Showcase'
     footerText.value = 'www.seusite.com.br'
-    loadSuggestions()
+    
+    // Auto-select context photos if available
+    if (project.value.context_photos && project.value.context_photos.length > 0) {
+        project.value.context_photos.forEach(url => selectedImages.value.add(url))
+    }
+    
+    await loadSuggestions()
 })
 
 const loadSuggestions = async () => {
@@ -123,7 +129,13 @@ const loadSuggestions = async () => {
     try {
         const query = `${project.value.theme} ${project.value.keywords.join(' ')}`
         // Add random param to force refresh if backend caches
-        suggestions.value = await $fetch(`http://localhost:35000/suggestions/images?query=${encodeURIComponent(query)}&t=${Date.now()}`)
+        const results = await $fetch(`http://localhost:35000/suggestions/images?query=${encodeURIComponent(query)}&t=${Date.now()}`)
+        suggestions.value = results
+        
+        // Auto-select first 3 suggestions if we have few selected images
+        if (selectedImages.value.size < 3 && results && results.length > 0) {
+             results.slice(0, 3).forEach(img => selectedImages.value.add(img.url))
+        }
     } catch (e) {
         console.error("Failed to load suggestions", e)
     } finally {

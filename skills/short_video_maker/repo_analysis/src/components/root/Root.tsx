@@ -2,6 +2,16 @@ import { CalculateMetadataFunction, Composition } from "remotion";
 import { shortVideoSchema } from "../utils";
 import { PortraitVideo } from "../videos/PortraitVideo";
 import { LandscapeVideo } from "../videos/LandscapeVideo";
+import { TopBottomText } from "../art-pieces/TopBottomText";
+import { AnimatedTitle } from "../art-pieces/AnimatedTitle";
+import { AnimatedChart } from "../art-pieces/AnimatedChart";
+import { AudioWaveform } from "../art-pieces/AudioWaveform";
+import { LottiePlayer } from "../art-pieces/LottiePlayer";
+import { ThreeDScene } from "../art-pieces/ThreeDScene";
+import { MotionBlurTitle } from "../art-pieces/MotionBlurTitle";
+import { GifScene } from "../art-pieces/GifScene";
+import { NoiseOverlay } from "../art-pieces/NoiseOverlay";
+import { PathDrawing } from "../art-pieces/PathDrawing";
 import { TestVideo } from "../videos/Test";
 import z from "zod";
 import { AvailableComponentsEnum } from "../types";
@@ -283,6 +293,131 @@ export const RemotionRoot: React.FC = () => {
         fps={23}
         width={100}
         height={100}
+      />
+      <Composition
+        id={AvailableComponentsEnum.TopBottomText}
+        component={TopBottomText}
+        durationInFrames={150}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          imageSrc: "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg",
+          topText: "WHEN THE CODE",
+          bottomText: "FINALLY WORKS",
+          textColor: "white",
+          textStrokeColor: "black",
+        }}
+      />
+      <Composition
+        id={AvailableComponentsEnum.AnimatedTitle}
+        component={AnimatedTitle}
+        durationInFrames={150}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          title: "EPIC MOMENT",
+          subtitle: "Wait for it...",
+          primaryColor: "#00d2ff",
+          secondaryColor: "#ffffff",
+        }}
+      />
+      <Composition
+        id={AvailableComponentsEnum.AnimatedChart}
+        component={AnimatedChart}
+        durationInFrames={150}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          data: [25, 60, 45, 90, 30],
+          labels: ["Q1", "Q2", "Q3", "Q4", "Q5"],
+          barColor: "#ffcc00",
+          textColor: "#ffffff",
+        }}
+      />
+      <Composition
+        id={AvailableComponentsEnum.AudioWaveform}
+        component={AudioWaveform}
+        durationInFrames={300}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          audioSrc: "https://assets.mixkit.co/active_storage/sfx/2438/2438-preview.mp3",
+          barColor: "#00ff99",
+        }}
+      />
+      <Composition
+        id={AvailableComponentsEnum.LottiePlayer}
+        component={LottiePlayer}
+        durationInFrames={150}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          animationUrl: "https://assets9.lottiefiles.com/packages/lf20_5njp3vgg.json",
+        }}
+      />
+      <Composition
+        id={AvailableComponentsEnum.ThreeDScene}
+        component={ThreeDScene}
+        durationInFrames={150}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          primaryColor: "#00d2ff",
+          text: "3D WORLD",
+        }}
+      />
+      <Composition
+        id={AvailableComponentsEnum.MotionBlurTitle}
+        component={MotionBlurTitle}
+        durationInFrames={90}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          text: "FAST",
+          color: "#ff0055",
+        }}
+      />
+      <Composition
+        id={AvailableComponentsEnum.GifScene}
+        component={GifScene}
+        durationInFrames={150}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          gifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzM0eDk1dm55eDV3ZnJ5eXJ6eXJ6eXJ6eXJ6eXJ6eXJ6eXJ6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKSjRrfIPjeiVyM/giphy.gif",
+          caption: "IT WORKS!",
+        }}
+      />
+      <Composition
+        id={AvailableComponentsEnum.NoiseOverlay}
+        component={NoiseOverlay}
+        durationInFrames={150}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          text: "NOISE",
+          noiseOpacity: 0.15,
+        }}
+      />
+      <Composition
+        id={AvailableComponentsEnum.PathDrawing}
+        component={PathDrawing}
+        durationInFrames={150}
+        fps={FPS}
+        width={1080}
+        height={1080}
+        defaultProps={{
+          color: "#00d2ff",
+        }}
       />
     </>
   );

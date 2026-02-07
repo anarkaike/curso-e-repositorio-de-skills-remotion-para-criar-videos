@@ -12,6 +12,8 @@ export const useProject = () => {
     niche: '',
     logo_path: '',
     context_photos: [],
-    references: []
+    references: [],
+    selectedComponent: 'PortraitVideo',
+    componentProps: {}
   }))
 }
